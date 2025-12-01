@@ -104,7 +104,6 @@ const KeyCopier = ({ onBack }) => {
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw key outline
     ctx.strokeStyle = '#ea580c';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -115,7 +114,6 @@ const KeyCopier = ({ onBack }) => {
     ctx.closePath();
     ctx.stroke();
 
-    // Draw control points
     points.forEach((point, i) => {
       ctx.fillStyle = '#fff';
       ctx.strokeStyle = '#ea580c';
@@ -125,13 +123,11 @@ const KeyCopier = ({ onBack }) => {
       ctx.fill();
       ctx.stroke();
 
-      // Draw point numbers
       ctx.fillStyle = '#1f2937';
       ctx.font = '12px sans-serif';
       ctx.fillText(i + 1, point.x + 10, point.y - 10);
     });
 
-    // Draw measurements if calibrated
     if (isCalibrated) {
       ctx.fillStyle = '#1f2937';
       ctx.font = '11px sans-serif';
