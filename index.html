@@ -1,1 +1,676 @@
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, Star, Key, RefreshCw, Grid, ArrowLeftRight, Download, RotateCcw, Plus, Minus } from 'lucide-react';
 
+const ToolsHub = () => {
+  const [currentView, setCurrentView] = useState('home');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [favorites, setFavorites] = useState([]);
+
+  const tools = [
+    { id: 'key-copier', name: 'Key Copier', category: 'Measurement', icon: Key, color: 'bg-orange-500' },
+    { id: 'unit-converter', name: 'Unit Converter', category: 'Utilities', icon: ArrowLeftRight, color: 'bg-amber-600' },
+    { id: 'pattern-generator', name: 'Pattern Generator', category: 'Creative', icon: Grid, color: 'bg-orange-400' }
+  ];
+
+  const filteredTools = tools.filter(tool =>
+    tool.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    tool.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const toggleFavorite = (toolId) => {
+    setFavorites(prev =>
+      prev.includes(toolId) ? prev.filter(id => id !== toolId) : [...prev, toolId]
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      {currentView === 'home' ? (
+        <div className="max-w-6xl mx-auto p-8">
+          <header className="mb-12 text-center">
+            <h1 className="text-5xl font-light text-gray-800 mb-4">Tools</h1>
+            <p className="text-gray-600 font-light">Personal utility collection</p>
+          </header>
+
+          <div className="mb-8 max-w-md mx-auto">
+            <div className="relative">
+              <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search tools..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-full border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300 bg-white"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredTools.map(tool => {
+              const Icon = tool.icon;
+              return (
+                <div
+                  key={tool.id}
+                  className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer border border-orange-100 relative"
+                  onClick={() => setCurrentView(tool.id)}
+                >
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleFavorite(tool.id);
+                    }}
+                    className="absolute top-4 right-4"
+                  >
+                    <Star
+                      size={20}
+                      className={favorites.includes(tool.id) ? 'fill-orange-400 text-orange-400' : 'text-gray-300'}
+                    />
+                  </button>
+                  <div className={`${tool.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4`}>
+                    <Icon className="text-white" size={28} />
+                  </div>
+                  <h3 className="text-xl font-light text-gray-800 mb-2">{tool.name}</h3>
+                  <p className="text-sm text-gray-500 font-light">{tool.category}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : currentView === 'key-copier' ? (
+        <KeyCopier onBack={() => setCurrentView('home')} />
+      ) : currentView === 'unit-converter' ? (
+        <UnitConverter onBack={() => setCurrentView('home')} />
+      ) : currentView === 'pattern-generator' ? (
+        <PatternGenerator onBack={() => setCurrentView('home')} />
+      ) : null}
+    </div>
+  );
+};
+
+const KeyCopier = ({ onBack }) => {
+  const canvasRef = useRef(null);
+  const [isCalibrated, setIsCalibrated] = useState(false);
+  const [pixelsPerMm, setPixelsPerMm] = useState(1);
+  const [points, setPoints] = useState([
+    { x: 150, y: 100 }, { x: 250, y: 100 }, { x: 250, y: 150 },
+    { x: 200, y: 180 }, { x: 150, y: 150 }
+  ]);
+  const [draggedPoint, setDraggedPoint] = useState(null);
+  const [calibrationSize, setCalibrationSize] = useState(100);
+
+  const drawCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw key outline
+    ctx.strokeStyle = '#ea580c';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    points.forEach((point, i) => {
+      if (i === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.closePath();
+    ctx.stroke();
+
+    // Draw control points
+    points.forEach((point, i) => {
+      ctx.fillStyle = '#fff';
+      ctx.strokeStyle = '#ea580c';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw point numbers
+      ctx.fillStyle = '#1f2937';
+      ctx.font = '12px sans-serif';
+      ctx.fillText(i + 1, point.x + 10, point.y - 10);
+    });
+
+    // Draw measurements if calibrated
+    if (isCalibrated) {
+      ctx.fillStyle = '#1f2937';
+      ctx.font = '11px sans-serif';
+      for (let i = 0; i < points.length; i++) {
+        const p1 = points[i];
+        const p2 = points[(i + 1) % points.length];
+        const dist = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+        const distMm = (dist / pixelsPerMm).toFixed(1);
+        const midX = (p1.x + p2.x) / 2;
+        const midY = (p1.y + p2.y) / 2;
+        ctx.fillText(`${distMm}mm`, midX, midY);
+      }
+    }
+  };
+
+  useEffect(() => {
+    drawCanvas();
+  }, [points, isCalibrated, pixelsPerMm]);
+
+  const handleMouseDown = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const pointIndex = points.findIndex(p =>
+      Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2)) < 10
+    );
+
+    if (pointIndex !== -1) {
+      setDraggedPoint(pointIndex);
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (draggedPoint === null) return;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    setPoints(prev => prev.map((p, i) => i === draggedPoint ? { x, y } : p));
+  };
+
+  const handleMouseUp = () => {
+    setDraggedPoint(null);
+  };
+
+  const calibrate = () => {
+    const quarterDiameterMm = 24.26;
+    setPixelsPerMm(calibrationSize / quarterDiameterMm);
+    setIsCalibrated(true);
+  };
+
+  const exportKey = () => {
+    const canvas = canvasRef.current;
+    const link = document.createElement('a');
+    link.download = 'key-copy.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  const addPoint = () => {
+    const lastPoint = points[points.length - 1];
+    setPoints([...points, { x: lastPoint.x + 20, y: lastPoint.y + 20 }]);
+  };
+
+  const removePoint = () => {
+    if (points.length > 3) {
+      setPoints(points.slice(0, -1));
+    }
+  };
+
+  const reset = () => {
+    setPoints([
+      { x: 150, y: 100 }, { x: 250, y: 100 }, { x: 250, y: 150 },
+      { x: 200, y: 180 }, { x: 150, y: 150 }
+    ]);
+    setIsCalibrated(false);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-8">
+      <button onClick={onBack} className="mb-6 text-gray-600 hover:text-gray-800 font-light">
+        ← Back
+      </button>
+
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-orange-100">
+        <h2 className="text-3xl font-light text-gray-800 mb-6">Key Copier</h2>
+
+        {!isCalibrated && (
+          <div className="mb-6 p-4 bg-orange-50 rounded-xl border border-orange-200">
+            <h3 className="font-medium text-gray-800 mb-3">Calibration Required</h3>
+            <p className="text-sm text-gray-600 mb-3">Hold a quarter to your screen and adjust the circle to match its size.</p>
+            <div className="flex items-center gap-4 mb-3">
+              <input
+                type="range"
+                min="50"
+                max="200"
+                value={calibrationSize}
+                onChange={(e) => setCalibrationSize(Number(e.target.value))}
+                className="flex-1"
+              />
+              <span className="text-sm text-gray-600 w-20">{calibrationSize}px</span>
+            </div>
+            <div className="flex justify-center mb-3">
+              <div
+                className="border-4 border-orange-500 rounded-full"
+                style={{ width: calibrationSize, height: calibrationSize }}
+              />
+            </div>
+            <button
+              onClick={calibrate}
+              className="w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition"
+            >
+              Confirm Calibration
+            </button>
+          </div>
+        )}
+
+        <div className="mb-4 flex gap-2 flex-wrap">
+          <button onClick={addPoint} className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition flex items-center gap-2">
+            <Plus size={16} /> Add Point
+          </button>
+          <button onClick={removePoint} className="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition flex items-center gap-2" disabled={points.length <= 3}>
+            <Minus size={16} /> Remove Point
+          </button>
+          <button onClick={reset} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+            <RotateCcw size={16} /> Reset
+          </button>
+          <button onClick={exportKey} className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition flex items-center gap-2">
+            <Download size={16} /> Export
+          </button>
+        </div>
+
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={400}
+          className="border-2 border-gray-200 rounded-xl cursor-move bg-gray-50"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        />
+
+        <p className="text-sm text-gray-500 mt-4 font-light">
+          Drag the points to match your key shape. {isCalibrated && 'Measurements shown in millimeters.'}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const UnitConverter = ({ onBack }) => {
+  const [category, setCategory] = useState('length');
+  const [fromUnit, setFromUnit] = useState('meters');
+  const [toUnit, setToUnit] = useState('feet');
+  const [fromValue, setFromValue] = useState('');
+  const [toValue, setToValue] = useState('');
+
+  const units = {
+    length: {
+      meters: 1, kilometers: 0.001, centimeters: 100, millimeters: 1000,
+      miles: 0.000621371, yards: 1.09361, feet: 3.28084, inches: 39.3701
+    },
+    weight: {
+      kilograms: 1, grams: 1000, pounds: 2.20462, ounces: 35.274, tons: 0.001
+    },
+    temperature: {
+      celsius: 'C', fahrenheit: 'F', kelvin: 'K'
+    },
+    volume: {
+      liters: 1, milliliters: 1000, gallons: 0.264172, quarts: 1.05669,
+      cups: 4.22675, tablespoons: 67.628, teaspoons: 202.884
+    },
+    speed: {
+      'meters/sec': 1, 'km/hour': 3.6, 'miles/hour': 2.23694, knots: 1.94384
+    },
+    data: {
+      bytes: 1, kilobytes: 0.001, megabytes: 0.000001, gigabytes: 0.000000001,
+      terabytes: 0.000000000001
+    }
+  };
+
+  const convertTemperature = (value, from, to) => {
+    let celsius;
+    if (from === 'celsius') celsius = value;
+    else if (from === 'fahrenheit') celsius = (value - 32) * 5/9;
+    else celsius = value - 273.15;
+
+    if (to === 'celsius') return celsius;
+    if (to === 'fahrenheit') return celsius * 9/5 + 32;
+    return celsius + 273.15;
+  };
+
+  const convert = (value, from, to, cat) => {
+    if (!value || isNaN(value)) return '';
+    const val = parseFloat(value);
+
+    if (cat === 'temperature') {
+      return convertTemperature(val, from, to).toFixed(2);
+    }
+
+    const baseValue = val / units[cat][from];
+    return (baseValue * units[cat][to]).toFixed(6).replace(/\.?0+$/, '');
+  };
+
+  const handleFromChange = (value) => {
+    setFromValue(value);
+    setToValue(convert(value, fromUnit, toUnit, category));
+  };
+
+  const handleToChange = (value) => {
+    setToValue(value);
+    setFromValue(convert(value, toUnit, fromUnit, category));
+  };
+
+  const swap = () => {
+    setFromUnit(toUnit);
+    setToUnit(fromUnit);
+    setFromValue(toValue);
+    setToValue(fromValue);
+  };
+
+  useEffect(() => {
+    const categoryUnits = Object.keys(units[category]);
+    setFromUnit(categoryUnits[0]);
+    setToUnit(categoryUnits[1] || categoryUnits[0]);
+    setFromValue('');
+    setToValue('');
+  }, [category]);
+
+  return (
+    <div className="max-w-2xl mx-auto p-8">
+      <button onClick={onBack} className="mb-6 text-gray-600 hover:text-gray-800 font-light">
+        ← Back
+      </button>
+
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-orange-100">
+        <h2 className="text-3xl font-light text-gray-800 mb-6">Unit Converter</h2>
+
+        <div className="mb-6">
+          <label className="block text-sm font-light text-gray-600 mb-2">Category</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+          >
+            <option value="length">Length</option>
+            <option value="weight">Weight</option>
+            <option value="temperature">Temperature</option>
+            <option value="volume">Volume</option>
+            <option value="speed">Speed</option>
+            <option value="data">Data</option>
+          </select>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">From</label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={fromValue}
+                onChange={(e) => handleFromChange(e.target.value)}
+                placeholder="Enter value"
+                className="flex-1 p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+              />
+              <select
+                value={fromUnit}
+                onChange={(e) => {
+                  setFromUnit(e.target.value);
+                  if (fromValue) setToValue(convert(fromValue, e.target.value, toUnit, category));
+                }}
+                className="p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+              >
+                {Object.keys(units[category]).map(unit => (
+                  <option key={unit} value={unit}>{unit}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              onClick={swap}
+              className="p-3 bg-orange-100 text-orange-700 rounded-full hover:bg-orange-200 transition"
+            >
+              <RefreshCw size={20} />
+            </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">To</label>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={toValue}
+                onChange={(e) => handleToChange(e.target.value)}
+                placeholder="Result"
+                className="flex-1 p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+              />
+              <select
+                value={toUnit}
+                onChange={(e) => {
+                  setToUnit(e.target.value);
+                  if (fromValue) setToValue(convert(fromValue, fromUnit, e.target.value, category));
+                }}
+                className="p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+              >
+                {Object.keys(units[category]).map(unit => (
+                  <option key={unit} value={unit}>{unit}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PatternGenerator = ({ onBack }) => {
+  const canvasRef = useRef(null);
+  const [shape, setShape] = useState('square');
+  const [color1, setColor1] = useState('#ea580c');
+  const [color2, setColor2] = useState('#f59e0b');
+  const [spacing, setSpacing] = useState(50);
+  const [rotation, setRotation] = useState(0);
+  const [size, setSize] = useState(30);
+
+  const drawPattern = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const cols = Math.ceil(canvas.width / spacing) + 1;
+    const rows = Math.ceil(canvas.height / spacing) + 1;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = col * spacing;
+        const y = row * spacing;
+        const useColor1 = (row + col) % 2 === 0;
+        ctx.fillStyle = useColor1 ? color1 : color2;
+
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate((rotation * Math.PI) / 180);
+
+        if (shape === 'square') {
+          ctx.fillRect(-size / 2, -size / 2, size, size);
+        } else if (shape === 'circle') {
+          ctx.beginPath();
+          ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (shape === 'triangle') {
+          ctx.beginPath();
+          ctx.moveTo(0, -size / 2);
+          ctx.lineTo(size / 2, size / 2);
+          ctx.lineTo(-size / 2, size / 2);
+          ctx.closePath();
+          ctx.fill();
+        } else if (shape === 'hexagon') {
+          ctx.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const angle = (Math.PI / 3) * i;
+            const px = (size / 2) * Math.cos(angle);
+            const py = (size / 2) * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+  };
+
+  useEffect(() => {
+    drawPattern();
+  }, [shape, color1, color2, spacing, rotation, size]);
+
+  const exportPNG = () => {
+    const canvas = canvasRef.current;
+    const link = document.createElement('a');
+    link.download = 'pattern.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  const exportSVG = () => {
+    const canvas = canvasRef.current;
+    const cols = Math.ceil(canvas.width / spacing) + 1;
+    const rows = Math.ceil(canvas.height / spacing) + 1;
+
+    let svg = `<svg width="${canvas.width}" height="${canvas.height}" xmlns="http://www.w3.org/2000/svg">`;
+    svg += `<rect width="100%" height="100%" fill="#ffffff"/>`;
+
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = col * spacing;
+        const y = row * spacing;
+        const useColor1 = (row + col) % 2 === 0;
+        const fill = useColor1 ? color1 : color2;
+
+        if (shape === 'square') {
+          svg += `<rect x="${x - size / 2}" y="${y - size / 2}" width="${size}" height="${size}" fill="${fill}" transform="rotate(${rotation} ${x} ${y})"/>`;
+        } else if (shape === 'circle') {
+          svg += `<circle cx="${x}" cy="${y}" r="${size / 2}" fill="${fill}"/>`;
+        } else if (shape === 'triangle') {
+          const p1 = `${x},${y - size / 2}`;
+          const p2 = `${x + size / 2},${y + size / 2}`;
+          const p3 = `${x - size / 2},${y + size / 2}`;
+          svg += `<polygon points="${p1} ${p2} ${p3}" fill="${fill}" transform="rotate(${rotation} ${x} ${y})"/>`;
+        }
+      }
+    }
+
+    svg += '</svg>';
+
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const link = document.createElement('a');
+    link.download = 'pattern.svg';
+    link.href = URL.createObjectURL(blob);
+    link.click();
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-8">
+      <button onClick={onBack} className="mb-6 text-gray-600 hover:text-gray-800 font-light">
+        ← Back
+      </button>
+
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-orange-100">
+        <h2 className="text-3xl font-light text-gray-800 mb-6">Pattern Generator</h2>
+
+        <div className="grid md:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Shape</label>
+            <select
+              value={shape}
+              onChange={(e) => setShape(e.target.value)}
+              className="w-full p-3 border border-orange-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+            >
+              <option value="square">Square</option>
+              <option value="circle">Circle</option>
+              <option value="triangle">Triangle</option>
+              <option value="hexagon">Hexagon</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Size: {size}px</label>
+            <input
+              type="range"
+              min="10"
+              max="80"
+              value={size}
+              onChange={(e) => setSize(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Color 1</label>
+            <input
+              type="color"
+              value={color1}
+              onChange={(e) => setColor1(e.target.value)}
+              className="w-full h-12 rounded-lg border border-orange-200 cursor-pointer"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Color 2</label>
+            <input
+              type="color"
+              value={color2}
+              onChange={(e) => setColor2(e.target.value)}
+              className="w-full h-12 rounded-lg border border-orange-200 cursor-pointer"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Spacing: {spacing}px</label>
+            <input
+              type="range"
+              min="20"
+              max="120"
+              value={spacing}
+              onChange={(e) => setSpacing(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-light text-gray-600 mb-2">Rotation: {rotation}°</label>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              value={rotation}
+              onChange={(e) => setRotation(Number(e.target.value))}
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <canvas
+          ref={canvasRef}
+          width={600}
+          height={400}
+          className="border-2 border-gray-200 rounded-xl w-full mb-4"
+        />
+
+        <div className="flex gap-2">
+          <button
+            onClick={exportPNG}
+            className="flex-1 bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition flex items-center justify-center gap-2"
+          >
+            <Download size={18} /> Export PNG
+          </button>
+          <button
+            onClick={exportSVG}
+            className="flex-1 bg-amber-600 text-white py-3 rounded-lg hover:bg-amber-700 transition flex items-center justify-center gap-2"
+          >
+            <Download size={18} /> Export SVG
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ToolsHub;
