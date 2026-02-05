@@ -625,7 +625,7 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <path d="m21 21-4.35-4.35"></path>
                     </svg>
-                    <input type="text" class="search-input" id="search" placeholder="Search tools...">
+                    <input type="text" class="search-input" id="search" placeholder="   Search tools...">
                 </div>
             </div>
 
@@ -834,35 +834,31 @@
                         
                         <div class="section">
                             <label class="label">Pick a Color</label>
-                            <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
-                                <canvas id="colorWheel" width="300" height="300" style="cursor: crosshair; border-radius: 50%;"></canvas>
-                            </div>
+                            <input type="color" id="colorInput" value="#3b82f6">
                         </div>
 
                         <div class="color-preview" id="colorPreview"></div>
 
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1.2fr; gap: 1rem;">
+                        <div class="grid-2">
                             <div class="section">
                                 <label class="label">HEX</label>
                                 <input type="text" id="hexValue" readonly>
-                                <button class="btn btn-secondary" onclick="copyValue('hexValue')" style="margin-top: 0.5rem; width: 100%;">📋 Copy</button>
                             </div>
                             <div class="section">
                                 <label class="label">RGB</label>
                                 <input type="text" id="rgbValue" readonly>
-                                <button class="btn btn-secondary" onclick="copyValue('rgbValue')" style="margin-top: 0.5rem; width: 100%;">📋 Copy</button>
                             </div>
                             <div class="section">
                                 <label class="label">HSL</label>
                                 <input type="text" id="hslValue" readonly>
-                                <button class="btn btn-secondary" onclick="copyValue('hslValue')" style="margin-top: 0.5rem; width: 100%;">📋 Copy</button>
                             </div>
                             <div class="section">
                                 <label class="label">CMYK</label>
                                 <input type="text" id="cmykValue" readonly>
-                                <button class="btn btn-secondary" onclick="copyValue('cmykValue')" style="margin-top: 0.5rem; width: 100%;">📋 Copy</button>
                             </div>
                         </div>
+
+                        <button class="btn btn-primary" onclick="copyHex()">📋 Copy HEX</button>
                     </div>
                 </div>
 
@@ -1159,10 +1155,7 @@
             
             // Initialize tool-specific functions
             if (t === 'pat') drawPat();
-            if (t === 'color') {
-                drawColorWheel();
-                updateColorDisplay();
-            }
+            if (t === 'color') updateColor();
             if (t === 'gradient') updateGradient();
         }
 
@@ -1349,114 +1342,24 @@
         }
 
         // ===== COLOR PICKER =====
-        const colorWheel = document.getElementById('colorWheel');
+        const colorInput = document.getElementById('colorInput');
         const colorPreview = document.getElementById('colorPreview');
         const hexValue = document.getElementById('hexValue');
         const rgbValue = document.getElementById('rgbValue');
         const hslValue = document.getElementById('hslValue');
         const cmykValue = document.getElementById('cmykValue');
 
-        let selectedColor = { r: 59, g: 130, b: 246 }; // Default blue
+        colorInput.addEventListener('input', updateColor);
 
-        function drawColorWheel() {
-            const canvas = colorWheel;
-            const ctx = canvas.getContext('2d');
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const radius = canvas.width / 2 - 10;
-
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw color wheel
-            for (let angle = 0; angle < 360; angle += 1) {
-                const startAngle = (angle - 1) * Math.PI / 180;
-                const endAngle = angle * Math.PI / 180;
-
-                for (let r = 0; r < radius; r += 1) {
-                    const sat = r / radius;
-                    const hsl = `hsl(${angle}, ${sat * 100}%, 50%)`;
-                    
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, r, startAngle, endAngle);
-                    ctx.strokeStyle = hsl;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
-
-            // Draw brightness gradient overlay
-            const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
-            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
-            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0.3)');
+        function updateColor() {
+            const color = colorInput.value;
+            colorPreview.style.background = color;
             
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.fillStyle = gradient;
-            ctx.fill();
-        }
-
-        colorWheel.addEventListener('click', (e) => {
-            const rect = colorWheel.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            hexValue.value = color.toUpperCase();
             
-            const centerX = colorWheel.width / 2;
-            const centerY = colorWheel.height / 2;
-            
-            const dx = x - centerX;
-            const dy = y - centerY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            const radius = colorWheel.width / 2 - 10;
-            
-            if (distance <= radius) {
-                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-                const hue = (angle + 360) % 360;
-                const saturation = Math.min(distance / radius * 100, 100);
-                
-                const rgb = hslToRgb(hue, saturation, 50);
-                selectedColor = rgb;
-                updateColorDisplay();
-            }
-        });
-
-        function hslToRgb(h, s, l) {
-            s /= 100;
-            l /= 100;
-
-            const c = (1 - Math.abs(2 * l - 1)) * s;
-            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-            const m = l - c / 2;
-            let r = 0, g = 0, b = 0;
-
-            if (h >= 0 && h < 60) {
-                r = c; g = x; b = 0;
-            } else if (h >= 60 && h < 120) {
-                r = x; g = c; b = 0;
-            } else if (h >= 120 && h < 180) {
-                r = 0; g = c; b = x;
-            } else if (h >= 180 && h < 240) {
-                r = 0; g = x; b = c;
-            } else if (h >= 240 && h < 300) {
-                r = x; g = 0; b = c;
-            } else if (h >= 300 && h < 360) {
-                r = c; g = 0; b = x;
-            }
-
-            return {
-                r: Math.round((r + m) * 255),
-                g: Math.round((g + m) * 255),
-                b: Math.round((b + m) * 255)
-            };
-        }
-
-        function updateColorDisplay() {
-            const { r, g, b } = selectedColor;
-            const hex = rgbToHex(r, g, b);
-            
-            colorPreview.style.background = `rgb(${r}, ${g}, ${b})`;
-            hexValue.value = hex;
+            const r = parseInt(color.substr(1, 2), 16);
+            const g = parseInt(color.substr(3, 2), 16);
+            const b = parseInt(color.substr(5, 2), 16);
             rgbValue.value = `rgb(${r}, ${g}, ${b})`;
             
             const hsl = rgbToHsl(r, g, b);
@@ -1464,13 +1367,6 @@
             
             const cmyk = rgbToCmyk(r, g, b);
             cmykValue.value = `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`;
-        }
-
-        function rgbToHex(r, g, b) {
-            return '#' + [r, g, b].map(x => {
-                const hex = x.toString(16);
-                return hex.length === 1 ? '0' + hex : hex;
-            }).join('').toUpperCase();
         }
 
         function rgbToHsl(r, g, b) {
@@ -1505,16 +1401,11 @@
             return { c: Math.round(c * 100), m: Math.round(m * 100), y: Math.round(y * 100), k: Math.round(k * 100) };
         }
 
-        function copyValue(fieldId) {
-            const field = document.getElementById(fieldId);
-            field.select();
+        function copyHex() {
+            hexValue.select();
             document.execCommand('copy');
-            alert('Copied to clipboard!');
+            alert('HEX code copied!');
         }
-
-        // Initialize color wheel and display
-        drawColorWheel();
-        updateColorDisplay();
 
         // ===== QR CODE GENERATOR =====
         let qrCode = null;
