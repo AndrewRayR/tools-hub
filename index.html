@@ -3,43 +3,1726 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tools</title>
+    <title>Tools Hub</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,sans-serif;background:linear-gradient(to bottom right,#fff7ed,#fef3c7);min-height:100vh;padding:2rem}.container{max-width:1200px;margin:0 auto}header{text-align:center;margin-bottom:3rem}h1{font-size:3rem;font-weight:300;color:#1f2937;margin-bottom:.5rem}.subtitle{color:#6b7280;font-weight:300}.search-container{max-width:500px;margin:0 auto 2rem;position:relative}.search-input{width:100%;padding:.75rem 1rem .75rem 3rem;border:1px solid #fed7aa;border-radius:9999px;font-size:1rem;background:#fff;outline:none}.search-input:focus{border-color:#fb923c;box-shadow:0 0 0 3px rgba(251,146,60,.1)}.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#9ca3af}.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem}.tool-card{background:#fff;border-radius:1rem;padding:2rem;border:1px solid #fed7aa;cursor:pointer;transition:all .2s;position:relative}.tool-card:hover{box-shadow:0 10px 15px -3px rgba(0,0,0,.1);transform:translateY(-2px)}.tool-icon{width:3.5rem;height:3.5rem;border-radius:.75rem;display:flex;align-items:center;justify-content:center;margin-bottom:1rem}.tool-icon svg{width:1.75rem;height:1.75rem;stroke:#fff;fill:none;stroke-width:2}.icon-orange{background:#ea580c}.icon-amber{background:#d97706}.icon-light-orange{background:#fb923c}.tool-name{font-size:1.25rem;font-weight:300;color:#1f2937;margin-bottom:.5rem}.tool-category{font-size:.875rem;color:#6b7280;font-weight:300}.star-btn{position:absolute;top:1rem;right:1rem;background:0 0;border:none;cursor:pointer;padding:.5rem}.star-btn svg{width:1.25rem;height:1.25rem;stroke:#d1d5db;fill:none;stroke-width:2}.star-btn.active svg{fill:#fb923c;stroke:#fb923c}.tool-view{background:#fff;border-radius:1rem;padding:2rem;border:1px solid #fed7aa;max-width:900px;margin:0 auto}.back-btn{background:0 0;border:none;color:#6b7280;cursor:pointer;font-size:1rem;margin-bottom:1.5rem;padding:.5rem}.back-btn:hover{color:#1f2937}.tool-title{font-size:2rem;font-weight:300;color:#1f2937;margin-bottom:1.5rem}.hidden{display:none}canvas{border:2px solid #e5e7eb;border-radius:.75rem;background:#f9fafb;cursor:move;width:100%;max-width:600px}.controls{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap}.btn{padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer;font-size:.875rem;display:flex;align-items:center;gap:.5rem;transition:all .2s}.btn-primary{background:#ea580c;color:#fff}.btn-primary:hover{background:#c2410c}.btn-secondary{background:#ffedd5;color:#c2410c}.btn-secondary:hover{background:#fed7aa}.btn-gray{background:#f3f4f6;color:#374151}.btn-gray:hover{background:#e5e7eb}.btn:disabled{opacity:.5;cursor:not-allowed}.cal-box{background:#fff7ed;border:1px solid #fed7aa;border-radius:.75rem;padding:1rem;margin-bottom:1.5rem}.cal-title{font-weight:500;color:#1f2937;margin-bottom:.75rem}.cal-text{font-size:.875rem;color:#6b7280;margin-bottom:.75rem}.slider-container{display:flex;align-items:center;gap:1rem;margin-bottom:.75rem}input[type=range]{flex:1}.circle-preview{display:flex;justify-content:center;margin-bottom:.75rem}.cal-circle{border:4px solid #ea580c;border-radius:50%}.conv-section{margin-bottom:1.5rem}.conv-label{display:block;font-size:.875rem;font-weight:300;color:#6b7280;margin-bottom:.5rem}.conv-input-group{display:flex;gap:.5rem}select,input[type=number]{padding:.75rem;border:1px solid #fed7aa;border-radius:.5rem;font-size:1rem;outline:none}select:focus,input[type=number]:focus{border-color:#fb923c;box-shadow:0 0 0 3px rgba(251,146,60,.1)}input[type=number]{flex:1}.swap-btn{background:#ffedd5;color:#c2410c;border:none;border-radius:50%;width:3rem;height:3rem;display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto}.swap-btn:hover{background:#fed7aa}.pattern-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:1.5rem}input[type=color]{width:100%;height:3rem;border:1px solid #fed7aa;border-radius:.5rem;cursor:pointer}.export-buttons{display:flex;gap:.5rem}.export-buttons .btn{flex:1;justify-content:center}.info-text{font-size:.875rem;color:#6b7280;font-weight:300;margin-top:1rem}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-tertiary: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #3a3a3a;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #10b981;
+            --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.5);
+            --sidebar-width: 260px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-section-title {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-color);
+            border-left-color: var(--accent-color);
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .toggle-sidebar-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background: var(--border-color);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.625rem 1rem 0.625rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        /* Home View */
+        .home-header {
+            margin-bottom: 2rem;
+        }
+
+        .home-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .home-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .tool-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            box-shadow: var(--card-shadow-hover);
+            transform: translateY(-2px);
+            border-color: var(--accent-color);
+        }
+
+        .tool-icon {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+        }
+
+        .tool-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .tool-name {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.375rem;
+        }
+
+        .tool-category {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* Tool View */
+        .tool-view {
+            max-width: 900px;
+        }
+
+        .tool-header {
+            margin-bottom: 2rem;
+        }
+
+        .tool-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-description {
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Controls and Inputs */
+        .section {
+            margin-bottom: 1.5rem;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+
+        input[type="color"] {
+            width: 100%;
+            height: 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            background: var(--bg-tertiary);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--border-color);
+            outline: none;
+        }
+
+        input[type="file"] {
+            color: var(--text-primary);
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9375rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        canvas {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .result-display {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            margin: 1rem 0;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 150px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .gradient-preview {
+            width: 100%;
+            height: 200px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        #qr-output {
+            display: flex;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        #qr-output canvas {
+            background: white;
+            padding: 1rem;
+        }
+
+        .diff-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .diff-line {
+            padding: 0.25rem 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+
+        .diff-added {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 3px solid var(--success-color);
+        }
+
+        .diff-removed {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 3px solid #ef4444;
+        }
+
+        .markdown-preview {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 200px;
+            color: var(--text-primary);
+        }
+
+        .markdown-preview h1 { font-size: 2rem; margin: 1rem 0; }
+        .markdown-preview h2 { font-size: 1.5rem; margin: 0.875rem 0; }
+        .markdown-preview h3 { font-size: 1.25rem; margin: 0.75rem 0; }
+        .markdown-preview p { margin: 0.5rem 0; }
+        .markdown-preview code { background: var(--bg-secondary); padding: 0.2rem 0.4rem; border-radius: 3px; }
+        .markdown-preview pre { background: var(--bg-secondary); padding: 1rem; border-radius: 6px; overflow-x: auto; }
+        .markdown-preview ul, .markdown-preview ol { margin-left: 1.5rem; }
+        .markdown-preview li { margin: 0.25rem 0; }
+        .markdown-preview a { color: var(--accent-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .diff-container {
+                grid-template-columns: 1fr;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div id="home">
-            <header><h1>Tools</h1><p class="subtitle">Personal utility collection</p></header>
-            <div class="search-container">
-                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-                <input type="text" class="search-input" id="search" placeholder="Search tools...">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-logo" onclick="showHome(); return false;">
+                    <span>🛠️</span>
+                    <span>Tools Hub</span>
+                </a>
+                <div class="sidebar-subtitle">Your web utilities</div>
             </div>
-            <div class="tools-grid" id="grid">
-                <div class="tool-card" data-tool="key">
-                    <button class="star-btn" data-tool="key"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
-                    <div class="tool-icon icon-orange"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg></div>
-                    <h3 class="tool-name">Key Copier</h3><p class="tool-category">Measurement</p>
-                </div>
-                <div class="tool-card" data-tool="conv">
-                    <button class="star-btn" data-tool="conv"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
-                    <div class="tool-icon icon-amber"><svg viewBox="0 0 24 24"><path d="m16 3 4 4-4 4"></path><path d="M20 7H4"></path><path d="m8 21-4-4 4-4"></path><path d="M4 17h16"></path></svg></div>
-                    <h3 class="tool-name">Unit Converter</h3><p class="tool-category">Utilities</p>
-                </div>
-                <div class="tool-card" data-tool="pat">
-                    <button class="star-btn" data-tool="pat"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></button>
-                    <div class="tool-icon icon-light-orange"><svg viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="3" rx="1"></rect><rect width="7" height="7" x="14" y="14" rx="1"></rect><rect width="7" height="7" x="3" y="14" rx="1"></rect></svg></div>
-                    <h3 class="tool-name">Pattern Generator</h3><p class="tool-category">Creative</p>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Tools</div>
+                
+                <a class="nav-item" data-tool="conv" onclick="showTool('conv')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
+                    <span>Unit Converter</span>
+                </a>
+
+                <a class="nav-item" data-tool="pat" onclick="showTool('pat')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Pattern Generator</span>
+                </a>
+
+                <a class="nav-item" data-tool="color" onclick="showTool('color')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                    <span>Color Picker</span>
+                </a>
+
+                <a class="nav-item" data-tool="qr" onclick="showTool('qr')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h7v7"></path></svg>
+                    <span>QR Code Generator</span>
+                </a>
+
+                <a class="nav-item" data-tool="case" onclick="showTool('case')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg>
+                    <span>Case Converter</span>
+                </a>
+
+                <a class="nav-item" data-tool="perc" onclick="showTool('perc')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                    <span>Percentage Calculator</span>
+                </a>
+
+                <a class="nav-item" data-tool="date" onclick="showTool('date')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Date Calculator</span>
+                </a>
+
+                <a class="nav-item" data-tool="resize" onclick="showTool('resize')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                    <span>Image Resizer</span>
+                </a>
+
+                <a class="nav-item" data-tool="gradient" onclick="showTool('gradient')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
+                    <span>Gradient Generator</span>
+                </a>
+
+                <a class="nav-item" data-tool="markdown" onclick="showTool('markdown')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"></path></svg>
+                    <span>Markdown Preview</span>
+                </a>
+
+                <a class="nav-item" data-tool="diff" onclick="showTool('diff')">
+                    <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    <span>Text Diff Checker</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="topbar">
+                <button class="toggle-sidebar-btn" id="toggleSidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="search-container">
+                    <svg class="search-icon" viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <input type="text" class="search-input" id="search" placeholder="Search tools...">
                 </div>
             </div>
-        </div>
-        <div id="key-view" class="hidden"><div class="tool-view"><button class="back-btn" onclick="showHome()">← Back</button><h2 class="tool-title">Key Copier</h2><div id="cal" class="cal-box"><h3 class="cal-title">Calibration Required</h3><p class="cal-text">Hold a quarter to your screen and adjust the circle to match its size.</p><div class="slider-container"><input type="range" id="cal-slider" min="50" max="200" value="100"><span id="cal-val">100px</span></div><div class="circle-preview"><div id="cal-circle" class="cal-circle" style="width:100px;height:100px"></div></div><button class="btn btn-primary" onclick="calibrate()" style="width:100%">Confirm Calibration</button></div><div class="cal-box" style="background:#fff;border-color:#e5e7eb"><p style="font-size:13px;color:#374151;margin-bottom:8px"><strong>Controls:</strong></p><p style="font-size:12px;color:#6b7280">← → Arrow Keys: Select cut | ↑ ↓: Adjust depth | A/D: Move cut left/right | Enter: Add cut | Delete: Remove cut</p></div><canvas id="kc" width="700" height="400"></canvas><p class="info-text">Selected: Cut #<span id="sel-cut">1</span> | <span id="minfo"></span></p></div></div>
-        <div id="conv-view" class="hidden"><div class="tool-view"><button class="back-btn" onclick="showHome()">← Back</button><h2 class="tool-title">Unit Converter</h2><div class="conv-section"><label class="conv-label">Category</label><select id="cat" style="width:100%"><option value="length">Length</option><option value="weight">Weight</option><option value="temp">Temperature</option><option value="vol">Volume</option><option value="speed">Speed</option><option value="data">Data</option></select></div><div class="conv-section"><label class="conv-label">From</label><div class="conv-input-group"><input type="number" id="fval" placeholder="Enter value"><select id="funit"></select></div></div><div style="text-align:center;margin:1rem 0"><button class="swap-btn" onclick="swap()">⇅</button></div><div class="conv-section"><label class="conv-label">To</label><div class="conv-input-group"><input type="number" id="tval" placeholder="Result"><select id="tunit"></select></div></div></div></div>
-        <div id="pat-view" class="hidden"><div class="tool-view"><button class="back-btn" onclick="showHome()">← Back</button><h2 class="tool-title">Pattern Generator</h2><div class="pattern-controls"><div><label class="conv-label">Shape</label><select id="shape" style="width:100%"><option value="sq">Square</option><option value="circ">Circle</option><option value="tri">Triangle</option><option value="hex">Hexagon</option></select></div><div><label class="conv-label">Size: <span id="szval">30</span>px</label><input type="range" id="size" min="10" max="80" value="30" style="width:100%"></div><div><label class="conv-label">Color 1</label><input type="color" id="c1" value="#ea580c"></div><div><label class="conv-label">Color 2</label><input type="color" id="c2" value="#f59e0b"></div><div><label class="conv-label">Spacing: <span id="spval">50</span>px</label><input type="range" id="space" min="20" max="120" value="50" style="width:100%"></div><div><label class="conv-label">Rotation: <span id="rotval">0</span>°</label><input type="range" id="rot" min="0" max="360" value="0" style="width:100%"></div></div><canvas id="pc" width="600" height="400" style="margin-bottom:1rem"></canvas><div class="export-buttons"><button class="btn btn-primary" onclick="expPNG()">💾 PNG</button><button class="btn btn-primary" onclick="expSVG()">💾 SVG</button></div></div></div>
+
+            <div class="content-area">
+                <!-- Home View -->
+                <div id="home-view">
+                    <div class="home-header">
+                        <h1 class="home-title">Tools Hub</h1>
+                        <p class="home-subtitle">Your one-stop destination for handy utilities. Click on any tool below to get started.</p>
+                    </div>
+
+                    <div class="tools-grid">
+                        <div class="tool-card" data-tool="conv" onclick="showTool('conv')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path></svg>
+                            </div>
+                            <div class="tool-name">Unit Converter</div>
+                            <div class="tool-category">Converter</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="pat" onclick="showTool('pat')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                            </div>
+                            <div class="tool-name">Pattern Generator</div>
+                            <div class="tool-category">Design</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="color" onclick="showTool('color')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>
+                            </div>
+                            <div class="tool-name">Color Picker</div>
+                            <div class="tool-category">Design</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="qr" onclick="showTool('qr')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h7v7"></path></svg>
+                            </div>
+                            <div class="tool-name">QR Code Generator</div>
+                            <div class="tool-category">Utility</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="case" onclick="showTool('case')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg>
+                            </div>
+                            <div class="tool-name">Case Converter</div>
+                            <div class="tool-category">Text</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="perc" onclick="showTool('perc')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                            </div>
+                            <div class="tool-name">Percentage Calculator</div>
+                            <div class="tool-category">Calculator</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="date" onclick="showTool('date')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="tool-name">Date Calculator</div>
+                            <div class="tool-category">Calculator</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="resize" onclick="showTool('resize')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                            </div>
+                            <div class="tool-name">Image Resizer</div>
+                            <div class="tool-category">Image</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="gradient" onclick="showTool('gradient')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect></svg>
+                            </div>
+                            <div class="tool-name">Gradient Generator</div>
+                            <div class="tool-category">Design</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="markdown" onclick="showTool('markdown')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><path d="M3 5h18M3 10h18M3 15h18M3 20h18"></path></svg>
+                            </div>
+                            <div class="tool-name">Markdown Preview</div>
+                            <div class="tool-category">Text</div>
+                        </div>
+
+                        <div class="tool-card" data-tool="diff" onclick="showTool('diff')">
+                            <div class="tool-icon">
+                                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </div>
+                            <div class="tool-name">Text Diff Checker</div>
+                            <div class="tool-category">Text</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unit Converter -->
+                <div id="conv-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Unit Converter</h2>
+                            <p class="tool-description">Convert between different units of measurement</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Category</label>
+                            <select id="cat">
+                                <option value="length">Length</option>
+                                <option value="weight">Weight</option>
+                                <option value="temp">Temperature</option>
+                                <option value="vol">Volume</option>
+                                <option value="speed">Speed</option>
+                                <option value="data">Data</option>
+                            </select>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">From</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <input type="number" id="fval" placeholder="Enter value">
+                                <select id="funit"></select>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin: 1rem 0;">
+                            <button class="btn btn-secondary" onclick="swap()">⇅ Swap</button>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">To</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                                <input type="number" id="tval" placeholder="Result" readonly>
+                                <select id="tunit"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pattern Generator -->
+                <div id="pat-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Pattern Generator</h2>
+                            <p class="tool-description">Create custom patterns for backgrounds and designs</p>
+                        </div>
+                        
+                        <div class="grid-2" style="margin-bottom: 1.5rem;">
+                            <div class="section">
+                                <label class="label">Shape</label>
+                                <select id="shape">
+                                    <option value="sq">Square</option>
+                                    <option value="circ">Circle</option>
+                                    <option value="tri">Triangle</option>
+                                    <option value="hex">Hexagon</option>
+                                </select>
+                            </div>
+                            
+                            <div class="section">
+                                <label class="label">Size: <span id="szval">30</span>px</label>
+                                <input type="range" id="size" min="10" max="80" value="30">
+                            </div>
+                            
+                            <div class="section">
+                                <label class="label">Color 1</label>
+                                <input type="color" id="c1" value="#3b82f6">
+                            </div>
+                            
+                            <div class="section">
+                                <label class="label">Color 2</label>
+                                <input type="color" id="c2" value="#2563eb">
+                            </div>
+                            
+                            <div class="section">
+                                <label class="label">Spacing: <span id="spval">50</span>px</label>
+                                <input type="range" id="space" min="20" max="120" value="50">
+                            </div>
+                            
+                            <div class="section">
+                                <label class="label">Rotation: <span id="rotval">0</span>°</label>
+                                <input type="range" id="rot" min="0" max="360" value="0">
+                            </div>
+                        </div>
+
+                        <canvas id="pc" width="600" height="400" style="margin-bottom: 1rem;"></canvas>
+                        
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="expPNG()">💾 Download PNG</button>
+                            <button class="btn btn-primary" onclick="expSVG()">💾 Download SVG</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color Picker -->
+                <div id="color-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Color Picker</h2>
+                            <p class="tool-description">Pick colors and get values in different formats</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Pick a Color</label>
+                            <input type="color" id="colorInput" value="#3b82f6">
+                        </div>
+
+                        <div class="color-preview" id="colorPreview"></div>
+
+                        <div class="grid-2">
+                            <div class="section">
+                                <label class="label">HEX</label>
+                                <input type="text" id="hexValue" readonly>
+                            </div>
+                            <div class="section">
+                                <label class="label">RGB</label>
+                                <input type="text" id="rgbValue" readonly>
+                            </div>
+                            <div class="section">
+                                <label class="label">HSL</label>
+                                <input type="text" id="hslValue" readonly>
+                            </div>
+                            <div class="section">
+                                <label class="label">CMYK</label>
+                                <input type="text" id="cmykValue" readonly>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="copyHex()">📋 Copy HEX</button>
+                    </div>
+                </div>
+
+                <!-- QR Code Generator -->
+                <div id="qr-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">QR Code Generator</h2>
+                            <p class="tool-description">Generate QR codes from text or URLs</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Text or URL</label>
+                            <textarea id="qrText" placeholder="Enter text or URL to generate QR code..."></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="generateQR()">Generate QR Code</button>
+
+                        <div id="qr-output"></div>
+
+                        <button class="btn btn-secondary" id="downloadQR" onclick="downloadQR()" style="display: none;">💾 Download QR Code</button>
+                    </div>
+                </div>
+
+                <!-- Case Converter -->
+                <div id="case-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Case Converter</h2>
+                            <p class="tool-description">Convert text between different cases</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Input Text</label>
+                            <textarea id="caseInput" placeholder="Enter text to convert..."></textarea>
+                        </div>
+
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="convertCase('upper')">UPPERCASE</button>
+                            <button class="btn btn-primary" onclick="convertCase('lower')">lowercase</button>
+                            <button class="btn btn-primary" onclick="convertCase('title')">Title Case</button>
+                            <button class="btn btn-primary" onclick="convertCase('sentence')">Sentence case</button>
+                            <button class="btn btn-primary" onclick="convertCase('camel')">camelCase</button>
+                            <button class="btn btn-primary" onclick="convertCase('snake')">snake_case</button>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">Output</label>
+                            <textarea id="caseOutput" readonly></textarea>
+                        </div>
+
+                        <button class="btn btn-secondary" onclick="copyCase()">📋 Copy Result</button>
+                    </div>
+                </div>
+
+                <!-- Percentage Calculator -->
+                <div id="perc-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Percentage Calculator</h2>
+                            <p class="tool-description">Calculate percentages quickly and easily</p>
+                        </div>
+                        
+                        <div class="section">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">What is <input type="number" id="perc1" style="width: 100px; display: inline-block;" value="25">% of <input type="number" id="num1" style="width: 100px; display: inline-block;" value="200">?</h3>
+                            <div class="result-display" id="result1">50</div>
+                        </div>
+
+                        <div class="section">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.125rem;"><input type="number" id="num2a" style="width: 100px; display: inline-block;" value="50"> is what % of <input type="number" id="num2b" style="width: 100px; display: inline-block;" value="200">?</h3>
+                            <div class="result-display" id="result2">25%</div>
+                        </div>
+
+                        <div class="section">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Percentage change from <input type="number" id="num3a" style="width: 100px; display: inline-block;" value="100"> to <input type="number" id="num3b" style="width: 100px; display: inline-block;" value="150"></h3>
+                            <div class="result-display" id="result3">+50%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date Calculator -->
+                <div id="date-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Date Calculator</h2>
+                            <p class="tool-description">Calculate differences between dates and add/subtract days</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Calculate Difference</label>
+                            <div class="grid-2">
+                                <div>
+                                    <label class="label">Start Date</label>
+                                    <input type="date" id="date1">
+                                </div>
+                                <div>
+                                    <label class="label">End Date</label>
+                                    <input type="date" id="date2">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="calcDateDiff()" style="margin-top: 1rem;">Calculate</button>
+                            <div class="result-display" id="dateDiff" style="display: none;"></div>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">Add/Subtract Days</label>
+                            <div class="grid-2">
+                                <div>
+                                    <label class="label">Start Date</label>
+                                    <input type="date" id="date3">
+                                </div>
+                                <div>
+                                    <label class="label">Days (+ or -)</label>
+                                    <input type="number" id="daysAdd" value="30">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="addDays()" style="margin-top: 1rem;">Calculate</button>
+                            <div class="result-display" id="dateResult" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Resizer -->
+                <div id="resize-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Image Resizer</h2>
+                            <p class="tool-description">Resize images to custom dimensions</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Upload Image</label>
+                            <input type="file" id="imageInput" accept="image/*" style="margin-bottom: 1rem;">
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="section">
+                                <label class="label">Width (px)</label>
+                                <input type="number" id="resizeWidth" placeholder="Width">
+                            </div>
+                            <div class="section">
+                                <label class="label">Height (px)</label>
+                                <input type="number" id="resizeHeight" placeholder="Height">
+                            </div>
+                        </div>
+
+                        <label style="display: block; margin-bottom: 1rem; color: var(--text-primary);">
+                            <input type="checkbox" id="maintainAspect" checked> Maintain aspect ratio
+                        </label>
+
+                        <canvas id="imageCanvas" style="display: none; margin-bottom: 1rem;"></canvas>
+
+                        <div class="controls">
+                            <button class="btn btn-primary" onclick="resizeImage()">Resize Image</button>
+                            <button class="btn btn-secondary" id="downloadImage" onclick="downloadImage()" style="display: none;">💾 Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gradient Generator -->
+                <div id="gradient-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Gradient Generator</h2>
+                            <p class="tool-description">Create beautiful CSS gradients</p>
+                        </div>
+                        
+                        <div class="gradient-preview" id="gradientPreview"></div>
+
+                        <div class="grid-2">
+                            <div class="section">
+                                <label class="label">Color 1</label>
+                                <input type="color" id="gradColor1" value="#3b82f6">
+                            </div>
+                            <div class="section">
+                                <label class="label">Color 2</label>
+                                <input type="color" id="gradColor2" value="#8b5cf6">
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">Direction: <span id="gradDirVal">90</span>°</label>
+                            <input type="range" id="gradDir" min="0" max="360" value="90">
+                        </div>
+
+                        <div class="section">
+                            <label class="label">CSS Code</label>
+                            <textarea id="gradientCSS" readonly style="min-height: 80px;"></textarea>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="copyGradient()">📋 Copy CSS</button>
+                    </div>
+                </div>
+
+                <!-- Markdown Preview -->
+                <div id="markdown-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Markdown Preview</h2>
+                            <p class="tool-description">Write markdown and see it rendered in real-time</p>
+                        </div>
+                        
+                        <div class="section">
+                            <label class="label">Markdown Input</label>
+                            <textarea id="markdownInput" placeholder="Enter markdown here...
+# Heading 1
+## Heading 2
+**bold** *italic*
+- List item
+1. Numbered item"></textarea>
+                        </div>
+
+                        <div class="section">
+                            <label class="label">Preview</label>
+                            <div class="markdown-preview" id="markdownOutput"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Diff Checker -->
+                <div id="diff-view" class="hidden">
+                    <div class="tool-view">
+                        <div class="tool-header">
+                            <h2 class="tool-title">Text Diff Checker</h2>
+                            <p class="tool-description">Compare two texts and highlight differences</p>
+                        </div>
+                        
+                        <div class="diff-container">
+                            <div class="section">
+                                <label class="label">Text 1</label>
+                                <textarea id="diffText1" placeholder="Enter first text..."></textarea>
+                            </div>
+                            <div class="section">
+                                <label class="label">Text 2</label>
+                                <textarea id="diffText2" placeholder="Enter second text..."></textarea>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="compareDiff()">Compare</button>
+
+                        <div class="section" id="diffResult" style="display: none;">
+                            <label class="label">Differences</label>
+                            <div id="diffOutput" style="background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.875rem;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-let favs=[],isCal=!1,pxPerMm=1,cuts=[{x:10,depth:4},{x:18,depth:5},{x:26,depth:1},{x:34,depth:3},{x:42,depth:6}],selCut=0,keyLen=50,keyW=8;const units={length:{m:1,km:.001,cm:100,mm:1000,mi:.000621371,yd:1.09361,ft:3.28084,in:39.3701},weight:{kg:1,g:1000,lb:2.20462,oz:35.274,t:.001},temp:{C:'C',F:'F',K:'K'},vol:{L:1,mL:1000,gal:.264172,qt:1.05669,cup:4.22675,tbsp:67.628,tsp:202.884},speed:{'m/s':1,'km/h':3.6,'mph':2.23694,kn:1.94384},data:{B:1,KB:.001,MB:1e-6,GB:1e-9,TB:1e-12}};function showHome(){document.getElementById('home').classList.remove('hidden');['key-view','conv-view','pat-view'].forEach(v=>document.getElementById(v).classList.add('hidden'));document.removeEventListener('keydown',handleKeyPress)}function showTool(t){document.getElementById('home').classList.add('hidden');document.getElementById(t+'-view').classList.remove('hidden');if(t=='pat')drawPat();if(t=='key'){drawKey();document.addEventListener('keydown',handleKeyPress)}}document.querySelectorAll('.tool-card').forEach(c=>c.addEventListener('click',e=>{e.target.closest('.star-btn')||showTool(c.dataset.tool)}));document.querySelectorAll('.star-btn').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();const t=b.dataset.tool;favs.includes(t)?(favs=favs.filter(f=>f!=t),b.classList.remove('active')):(favs.push(t),b.classList.add('active'))}));document.getElementById('search').addEventListener('input',e=>{const term=e.target.value.toLowerCase();document.querySelectorAll('.tool-card').forEach(c=>{const name=c.querySelector('.tool-name').textContent.toLowerCase(),cat=c.querySelector('.tool-category').textContent.toLowerCase();c.style.display=name.includes(term)||cat.includes(term)?'block':'none'})});const cslide=document.getElementById('cal-slider'),cval=document.getElementById('cal-val'),ccirc=document.getElementById('cal-circle');cslide.addEventListener('input',e=>{const s=e.target.value;cval.textContent=s+'px';ccirc.style.width=s+'px';ccirc.style.height=s+'px'});function calibrate(){pxPerMm=parseInt(cslide.value)/24.26;isCal=!0;document.getElementById('cal').style.display='none';document.getElementById('minfo').textContent='Calibrated';drawKey()}function handleKeyPress(e){if(e.key=='ArrowLeft'){selCut=Math.max(0,selCut-1);updateSel()}else if(e.key=='ArrowRight'){selCut=Math.min(cuts.length-1,selCut+1);updateSel()}else if(e.key=='ArrowUp'){cuts[selCut].depth=Math.max(0,cuts[selCut].depth-0.5);drawKey()}else if(e.key=='ArrowDown'){cuts[selCut].depth=Math.min(keyW,cuts[selCut].depth+0.5);drawKey()}else if(e.key=='a'||e.key=='A'){cuts[selCut].x=Math.max(5,cuts[selCut].x-0.5);cuts.sort((a,b)=>a.x-b.x);drawKey()}else if(e.key=='d'||e.key=='D'){cuts[selCut].x=Math.min(keyLen-2,cuts[selCut].x+0.5);cuts.sort((a,b)=>a.x-b.x);drawKey()}else if(e.key=='Enter'){addCut()}else if(e.key=='Delete'){remCut()}}function updateSel(){document.getElementById('sel-cut').textContent=selCut+1;drawKey()}function drawKey(){const cv=document.getElementById('kc'),ctx=cv.getContext('2d'),scale=isCal?pxPerMm:6,keyY=200,kL=keyLen*scale,kW=keyW*scale,start=50;ctx.clearRect(0,0,cv.width,cv.height);ctx.fillStyle='#1f2937';ctx.font='12px monospace';ctx.fillText('KW1',start+kL+15,keyY-kW/2-10);ctx.strokeStyle='#d1d5db';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.strokeRect(start,keyY-kW/2,kL,kW);ctx.setLineDash([]);cuts.forEach((c,i)=>{ctx.strokeStyle='#6b7280';ctx.lineWidth=1;const cx=start+c.x*scale;ctx.beginPath();ctx.moveTo(cx,keyY-kW/2-20);ctx.lineTo(cx,keyY+kW/2+20);ctx.stroke();ctx.fillStyle='#374151';ctx.font='11px monospace';ctx.fillText((i+1),cx-3,keyY-kW/2-25);if(i==selCut){ctx.strokeStyle='#ea580c';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx-5,keyY-kW/2-15);ctx.lineTo(cx,keyY-kW/2-20);ctx.lineTo(cx+5,keyY-kW/2-15);ctx.stroke()}});ctx.strokeStyle='#ea580c';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(start,keyY-kW/2);for(let i=0;i<cuts.length;i++){const c=cuts[i],cx=start+c.x*scale,cy=keyY-kW/2+c.depth*scale,nx=i<cuts.length-1?start+cuts[i+1].x*scale:start+kL;ctx.lineTo(cx,keyY-kW/2);ctx.lineTo(cx,cy);ctx.lineTo(nx,cy)}ctx.lineTo(start+kL,keyY+kW/2);ctx.lineTo(start,keyY+kW/2);ctx.closePath();ctx.stroke();cuts.forEach((c,i)=>{const cx=start+c.x*scale;if(isCal){ctx.fillStyle='#ea580c';ctx.font='10px monospace';ctx.fillText(c.depth.toFixed(1)+'mm',cx+5,keyY-kW/2+c.depth*scale-5)}})}function addCut(){const last=cuts[cuts.length-1];cuts.push({x:Math.min(last.x+5,keyLen-2),depth:3});cuts.sort((a,b)=>a.x-b.x);drawKey()}function remCut(){if(cuts.length>2){cuts.splice(selCut,1);selCut=Math.min(selCut,cuts.length-1);updateSel();drawKey()}}function resetKey(){cuts=[{x:10,depth:4},{x:18,depth:5},{x:26,depth:1},{x:34,depth:3},{x:42,depth:6}];selCut=0;isCal=!1;document.getElementById('cal').style.display='block';document.getElementById('minfo').textContent='';updateSel();drawKey()}function exportKey(){const link=document.createElement('a');link.download='key.png';link.href=kc.toDataURL();link.click()}const cat=document.getElementById('cat'),fval=document.getElementById('fval'),tval=document.getElementById('tval'),funit=document.getElementById('funit'),tunit=document.getElementById('tunit');function loadUnits(){const c=cat.value,us=Object.keys(units[c]);funit.innerHTML=tunit.innerHTML=us.map(u=>`<option value="${u}">${u}</option>`).join('');fval.value='';tval.value=''}cat.addEventListener('change',loadUnits);function convTemp(v,f,t){let c;c=f=='C'?v:f=='F'?(v-32)*5/9:v-273.15;return t=='C'?c:t=='F'?c*9/5+32:c+273.15}function conv(v,f,t,c){if(!v||isNaN(v))return'';const val=parseFloat(v);if(c=='temp')return convTemp(val,f,t).toFixed(2);const base=val/units[c][f];return(base*units[c][t]).toFixed(6).replace(/\.?0+$/,'')}fval.addEventListener('input',()=>tval.value=conv(fval.value,funit.value,tunit.value,cat.value));tval.addEventListener('input',()=>fval.value=conv(tval.value,tunit.value,funit.value,cat.value));funit.addEventListener('change',()=>fval.value&&(tval.value=conv(fval.value,funit.value,tunit.value,cat.value)));tunit.addEventListener('change',()=>fval.value&&(tval.value=conv(fval.value,funit.value,tunit.value,cat.value)));function swap(){[funit.value,tunit.value]=[tunit.value,funit.value];[fval.value,tval.value]=[tval.value,fval.value]}loadUnits();const shape=document.getElementById('shape'),c1=document.getElementById('c1'),c2=document.getElementById('c2'),space=document.getElementById('space'),rot=document.getElementById('rot'),size=document.getElementById('size'),pc=document.getElementById('pc');size.addEventListener('input',e=>{document.getElementById('szval').textContent=e.target.value;drawPat()});space.addEventListener('input',e=>{document.getElementById('spval').textContent=e.target.value;drawPat()});rot.addEventListener('input',e=>{document.getElementById('rotval').textContent=e.target.value;drawPat()});[shape,c1,c2].forEach(el=>el.addEventListener('change',drawPat));function drawPat(){const ctx=pc.getContext('2d'),sp=parseInt(space.value),sz=parseInt(size.value),r=parseInt(rot.value),sh=shape.value;ctx.clearRect(0,0,pc.width,pc.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,pc.width,pc.height);const cols=Math.ceil(pc.width/sp)+1,rows=Math.ceil(pc.height/sp)+1;for(let row=0;row<rows;row++){for(let col=0;col<cols;col++){const x=col*sp,y=row*sp;ctx.fillStyle=(row+col)%2==0?c1.value:c2.value;ctx.save();ctx.translate(x,y);ctx.rotate(r*Math.PI/180);if(sh=='sq')ctx.fillRect(-sz/2,-sz/2,sz,sz);else if(sh=='circ'){ctx.beginPath();ctx.arc(0,0,sz/2,0,Math.PI*2);ctx.fill()}else if(sh=='tri'){ctx.beginPath();ctx.moveTo(0,-sz/2);ctx.lineTo(sz/2,sz/2);ctx.lineTo(-sz/2,sz/2);ctx.closePath();ctx.fill()}else if(sh=='hex'){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i,px=sz/2*Math.cos(a),py=sz/2*Math.sin(a);i==0?ctx.moveTo(px,py):ctx.lineTo(px,py)}ctx.closePath();ctx.fill()}ctx.restore()}}}function expPNG(){const link=document.createElement('a');link.download='pattern.png';link.href=pc.toDataURL();link.click()}function expSVG(){const sp=parseInt(space.value),sz=parseInt(size.value),r=parseInt(rot.value),sh=shape.value,cols=Math.ceil(pc.width/sp)+1,rows=Math.ceil(pc.height/sp)+1;let svg=`<svg width="${pc.width}" height="${pc.height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#fff"/>`;for(let row=0;row<rows;row++){for(let col=0;col<cols;col++){const x=col*sp,y=row*sp,fill=(row+col)%2==0?c1.value:c2.value;if(sh=='sq')svg+=`<rect x="${x-sz/2}" y="${y-sz/2}" width="${sz}" height="${sz}" fill="${fill}" transform="rotate(${r} ${x} ${y})"/>`;else if(sh=='circ')svg+=`<circle cx="${x}" cy="${y}" r="${sz/2}" fill="${fill}"/>`;else if(sh=='tri'){const p=`${x},${y-sz/2} ${x+sz/2},${y+sz/2} ${x-sz/2},${y+sz/2}`;svg+=`<polygon points="${p}" fill="${fill}" transform="rotate(${r} ${x} ${y})"/>`}}}svg+='</svg>';const blob=new Blob([svg],{type:'image/svg+xml'}),link=document.createElement('a');link.download='pattern.svg';link.href=URL.createObjectURL(blob);link.click()}drawKey()
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        const toggleBtn = document.getElementById('toggleSidebar');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+            
+            // For mobile
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+            }
+        });
+
+        // Navigation
+        function showHome() {
+            document.getElementById('home-view').classList.remove('hidden');
+            ['conv-view', 'pat-view', 'color-view', 'qr-view', 'case-view', 'perc-view', 'date-view', 'resize-view', 'gradient-view', 'markdown-view', 'diff-view'].forEach(v => {
+                document.getElementById(v).classList.add('hidden');
+            });
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        }
+
+        function showTool(t) {
+            document.getElementById('home-view').classList.add('hidden');
+            ['conv-view', 'pat-view', 'color-view', 'qr-view', 'case-view', 'perc-view', 'date-view', 'resize-view', 'gradient-view', 'markdown-view', 'diff-view'].forEach(v => {
+                document.getElementById(v).classList.add('hidden');
+            });
+            document.getElementById(t + '-view').classList.remove('hidden');
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                if (item.dataset.tool === t) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            // Initialize tool-specific functions
+            if (t === 'pat') drawPat();
+            if (t === 'color') updateColor();
+            if (t === 'gradient') updateGradient();
+        }
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', e => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.tool-card').forEach(c => {
+                const name = c.querySelector('.tool-name').textContent.toLowerCase();
+                const cat = c.querySelector('.tool-category').textContent.toLowerCase();
+                c.style.display = name.includes(term) || cat.includes(term) ? 'block' : 'none';
+            });
+        });
+
+        // ===== UNIT CONVERTER =====
+        const units = {
+            length: { m: 1, km: 0.001, cm: 100, mm: 1000, mi: 0.000621371, yd: 1.09361, ft: 3.28084, in: 39.3701 },
+            weight: { kg: 1, g: 1000, lb: 2.20462, oz: 35.274, t: 0.001 },
+            temp: { C: 'C', F: 'F', K: 'K' },
+            vol: { L: 1, mL: 1000, gal: 0.264172, qt: 1.05669, cup: 4.22675, tbsp: 67.628, tsp: 202.884 },
+            speed: { 'm/s': 1, 'km/h': 3.6, 'mph': 2.23694, kn: 1.94384 },
+            data: { B: 1, KB: 0.001, MB: 0.000001, GB: 0.000000001, TB: 0.000000000001 }
+        };
+
+        const cat = document.getElementById('cat');
+        const fval = document.getElementById('fval');
+        const tval = document.getElementById('tval');
+        const funit = document.getElementById('funit');
+        const tunit = document.getElementById('tunit');
+
+        function loadUnits() {
+            const c = cat.value;
+            const us = Object.keys(units[c]);
+            funit.innerHTML = tunit.innerHTML = us.map(u => `<option value="${u}">${u}</option>`).join('');
+            fval.value = '';
+            tval.value = '';
+        }
+
+        cat.addEventListener('change', loadUnits);
+
+        function convTemp(v, f, t) {
+            let c;
+            c = f === 'C' ? v : f === 'F' ? (v - 32) * 5 / 9 : v - 273.15;
+            return t === 'C' ? c : t === 'F' ? c * 9 / 5 + 32 : c + 273.15;
+        }
+
+        function conv(v, f, t, c) {
+            if (!v || isNaN(v)) return '';
+            const val = parseFloat(v);
+            if (c === 'temp') return convTemp(val, f, t).toFixed(2);
+            const base = val / units[c][f];
+            return (base * units[c][t]).toFixed(6).replace(/\.?0+$/, '');
+        }
+
+        fval.addEventListener('input', () => tval.value = conv(fval.value, funit.value, tunit.value, cat.value));
+        tval.addEventListener('input', () => fval.value = conv(tval.value, tunit.value, funit.value, cat.value));
+        funit.addEventListener('change', () => fval.value && (tval.value = conv(fval.value, funit.value, tunit.value, cat.value)));
+        tunit.addEventListener('change', () => fval.value && (tval.value = conv(fval.value, funit.value, tunit.value, cat.value)));
+
+        function swap() {
+            [funit.value, tunit.value] = [tunit.value, funit.value];
+            [fval.value, tval.value] = [tval.value, fval.value];
+        }
+
+        loadUnits();
+
+        // ===== PATTERN GENERATOR =====
+        const shape = document.getElementById('shape');
+        const c1 = document.getElementById('c1');
+        const c2 = document.getElementById('c2');
+        const space = document.getElementById('space');
+        const rot = document.getElementById('rot');
+        const size = document.getElementById('size');
+        const pc = document.getElementById('pc');
+
+        size.addEventListener('input', e => {
+            document.getElementById('szval').textContent = e.target.value;
+            drawPat();
+        });
+
+        space.addEventListener('input', e => {
+            document.getElementById('spval').textContent = e.target.value;
+            drawPat();
+        });
+
+        rot.addEventListener('input', e => {
+            document.getElementById('rotval').textContent = e.target.value;
+            drawPat();
+        });
+
+        [shape, c1, c2].forEach(el => el.addEventListener('change', drawPat));
+
+        function drawPat() {
+            const ctx = pc.getContext('2d');
+            const sp = parseInt(space.value);
+            const sz = parseInt(size.value);
+            const r = parseInt(rot.value);
+            const sh = shape.value;
+
+            ctx.clearRect(0, 0, pc.width, pc.height);
+            ctx.fillStyle = '#2d2d2d';
+            ctx.fillRect(0, 0, pc.width, pc.height);
+
+            const cols = Math.ceil(pc.width / sp) + 1;
+            const rows = Math.ceil(pc.height / sp) + 1;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = col * sp;
+                    const y = row * sp;
+                    ctx.fillStyle = (row + col) % 2 === 0 ? c1.value : c2.value;
+                    ctx.save();
+                    ctx.translate(x, y);
+                    ctx.rotate(r * Math.PI / 180);
+
+                    if (sh === 'sq') {
+                        ctx.fillRect(-sz / 2, -sz / 2, sz, sz);
+                    } else if (sh === 'circ') {
+                        ctx.beginPath();
+                        ctx.arc(0, 0, sz / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (sh === 'tri') {
+                        ctx.beginPath();
+                        ctx.moveTo(0, -sz / 2);
+                        ctx.lineTo(sz / 2, sz / 2);
+                        ctx.lineTo(-sz / 2, sz / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                    } else if (sh === 'hex') {
+                        ctx.beginPath();
+                        for (let i = 0; i < 6; i++) {
+                            const a = Math.PI / 3 * i;
+                            const px = sz / 2 * Math.cos(a);
+                            const py = sz / 2 * Math.sin(a);
+                            i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+                        }
+                        ctx.closePath();
+                        ctx.fill();
+                    }
+                    ctx.restore();
+                }
+            }
+        }
+
+        function expPNG() {
+            const link = document.createElement('a');
+            link.download = 'pattern.png';
+            link.href = pc.toDataURL();
+            link.click();
+        }
+
+        function expSVG() {
+            const sp = parseInt(space.value);
+            const sz = parseInt(size.value);
+            const r = parseInt(rot.value);
+            const sh = shape.value;
+            const cols = Math.ceil(pc.width / sp) + 1;
+            const rows = Math.ceil(pc.height / sp) + 1;
+
+            let svg = `<svg width="${pc.width}" height="${pc.height}" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="#2d2d2d"/>`;
+
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const x = col * sp;
+                    const y = row * sp;
+                    const fill = (row + col) % 2 === 0 ? c1.value : c2.value;
+
+                    if (sh === 'sq') {
+                        svg += `<rect x="${x - sz / 2}" y="${y - sz / 2}" width="${sz}" height="${sz}" fill="${fill}" transform="rotate(${r} ${x} ${y})"/>`;
+                    } else if (sh === 'circ') {
+                        svg += `<circle cx="${x}" cy="${y}" r="${sz / 2}" fill="${fill}"/>`;
+                    } else if (sh === 'tri') {
+                        const p = `${x},${y - sz / 2} ${x + sz / 2},${y + sz / 2} ${x - sz / 2},${y + sz / 2}`;
+                        svg += `<polygon points="${p}" fill="${fill}" transform="rotate(${r} ${x} ${y})"/>`;
+                    }
+                }
+            }
+
+            svg += '</svg>';
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const link = document.createElement('a');
+            link.download = 'pattern.svg';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+
+        // ===== COLOR PICKER =====
+        const colorInput = document.getElementById('colorInput');
+        const colorPreview = document.getElementById('colorPreview');
+        const hexValue = document.getElementById('hexValue');
+        const rgbValue = document.getElementById('rgbValue');
+        const hslValue = document.getElementById('hslValue');
+        const cmykValue = document.getElementById('cmykValue');
+
+        colorInput.addEventListener('input', updateColor);
+
+        function updateColor() {
+            const color = colorInput.value;
+            colorPreview.style.background = color;
+            
+            hexValue.value = color.toUpperCase();
+            
+            const r = parseInt(color.substr(1, 2), 16);
+            const g = parseInt(color.substr(3, 2), 16);
+            const b = parseInt(color.substr(5, 2), 16);
+            rgbValue.value = `rgb(${r}, ${g}, ${b})`;
+            
+            const hsl = rgbToHsl(r, g, b);
+            hslValue.value = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+            
+            const cmyk = rgbToCmyk(r, g, b);
+            cmykValue.value = `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`;
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        }
+
+        function rgbToCmyk(r, g, b) {
+            if (r === 0 && g === 0 && b === 0) return { c: 0, m: 0, y: 0, k: 100 };
+            
+            r /= 255; g /= 255; b /= 255;
+            const k = 1 - Math.max(r, g, b);
+            const c = (1 - r - k) / (1 - k);
+            const m = (1 - g - k) / (1 - k);
+            const y = (1 - b - k) / (1 - k);
+
+            return { c: Math.round(c * 100), m: Math.round(m * 100), y: Math.round(y * 100), k: Math.round(k * 100) };
+        }
+
+        function copyHex() {
+            hexValue.select();
+            document.execCommand('copy');
+            alert('HEX code copied!');
+        }
+
+        // ===== QR CODE GENERATOR =====
+        let qrCode = null;
+
+        function generateQR() {
+            const text = document.getElementById('qrText').value;
+            if (!text) {
+                alert('Please enter text or URL');
+                return;
+            }
+
+            const output = document.getElementById('qr-output');
+            output.innerHTML = '';
+            
+            qrCode = new QRCode(output, {
+                text: text,
+                width: 256,
+                height: 256,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('downloadQR').style.display = 'inline-flex';
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qr-output canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            }
+        }
+
+        // ===== CASE CONVERTER =====
+        function convertCase(type) {
+            const input = document.getElementById('caseInput').value;
+            const output = document.getElementById('caseOutput');
+            
+            if (!input) return;
+
+            switch(type) {
+                case 'upper':
+                    output.value = input.toUpperCase();
+                    break;
+                case 'lower':
+                    output.value = input.toLowerCase();
+                    break;
+                case 'title':
+                    output.value = input.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                    break;
+                case 'sentence':
+                    output.value = input.toLowerCase().replace(/(^\w|\.\s+\w)/g, txt => txt.toUpperCase());
+                    break;
+                case 'camel':
+                    output.value = input.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+                    break;
+                case 'snake':
+                    output.value = input.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+                    break;
+            }
+        }
+
+        function copyCase() {
+            const output = document.getElementById('caseOutput');
+            output.select();
+            document.execCommand('copy');
+            alert('Text copied!');
+        }
+
+        // ===== PERCENTAGE CALCULATOR =====
+        const perc1 = document.getElementById('perc1');
+        const num1 = document.getElementById('num1');
+        const result1 = document.getElementById('result1');
+
+        const num2a = document.getElementById('num2a');
+        const num2b = document.getElementById('num2b');
+        const result2 = document.getElementById('result2');
+
+        const num3a = document.getElementById('num3a');
+        const num3b = document.getElementById('num3b');
+        const result3 = document.getElementById('result3');
+
+        function calcPerc1() {
+            const p = parseFloat(perc1.value) || 0;
+            const n = parseFloat(num1.value) || 0;
+            result1.textContent = ((p / 100) * n).toFixed(2);
+        }
+
+        function calcPerc2() {
+            const a = parseFloat(num2a.value) || 0;
+            const b = parseFloat(num2b.value) || 0;
+            result2.textContent = b !== 0 ? ((a / b) * 100).toFixed(2) + '%' : '0%';
+        }
+
+        function calcPerc3() {
+            const a = parseFloat(num3a.value) || 0;
+            const b = parseFloat(num3b.value) || 0;
+            if (a !== 0) {
+                const change = ((b - a) / a) * 100;
+                result3.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + '%';
+            }
+        }
+
+        [perc1, num1].forEach(el => el.addEventListener('input', calcPerc1));
+        [num2a, num2b].forEach(el => el.addEventListener('input', calcPerc2));
+        [num3a, num3b].forEach(el => el.addEventListener('input', calcPerc3));
+
+        calcPerc1();
+        calcPerc2();
+        calcPerc3();
+
+        // ===== DATE CALCULATOR =====
+        function calcDateDiff() {
+            const d1 = new Date(document.getElementById('date1').value);
+            const d2 = new Date(document.getElementById('date2').value);
+            
+            if (!d1 || !d2 || isNaN(d1) || isNaN(d2)) {
+                alert('Please select both dates');
+                return;
+            }
+
+            const diff = Math.abs(d2 - d1);
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const weeks = Math.floor(days / 7);
+            const months = Math.floor(days / 30.44);
+            const years = Math.floor(days / 365.25);
+
+            const result = document.getElementById('dateDiff');
+            result.style.display = 'block';
+            result.innerHTML = `${days} days<br>${weeks} weeks<br>${months} months<br>${years} years`;
+        }
+
+        function addDays() {
+            const d = new Date(document.getElementById('date3').value);
+            const days = parseInt(document.getElementById('daysAdd').value) || 0;
+            
+            if (!d || isNaN(d)) {
+                alert('Please select a date');
+                return;
+            }
+
+            d.setDate(d.getDate() + days);
+            
+            const result = document.getElementById('dateResult');
+            result.style.display = 'block';
+            result.textContent = d.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date1').value = today;
+        document.getElementById('date2').value = today;
+        document.getElementById('date3').value = today;
+
+        // ===== IMAGE RESIZER =====
+        let currentImage = null;
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    currentImage = img;
+                    document.getElementById('resizeWidth').value = img.width;
+                    document.getElementById('resizeHeight').value = img.height;
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('resizeWidth').addEventListener('input', function() {
+            if (document.getElementById('maintainAspect').checked && currentImage) {
+                const ratio = currentImage.height / currentImage.width;
+                document.getElementById('resizeHeight').value = Math.round(this.value * ratio);
+            }
+        });
+
+        document.getElementById('resizeHeight').addEventListener('input', function() {
+            if (document.getElementById('maintainAspect').checked && currentImage) {
+                const ratio = currentImage.width / currentImage.height;
+                document.getElementById('resizeWidth').value = Math.round(this.value * ratio);
+            }
+        });
+
+        function resizeImage() {
+            if (!currentImage) {
+                alert('Please upload an image first');
+                return;
+            }
+
+            const width = parseInt(document.getElementById('resizeWidth').value);
+            const height = parseInt(document.getElementById('resizeHeight').value);
+
+            if (!width || !height) {
+                alert('Please enter valid dimensions');
+                return;
+            }
+
+            const canvas = document.getElementById('imageCanvas');
+            canvas.width = width;
+            canvas.height = height;
+            canvas.style.display = 'block';
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(currentImage, 0, 0, width, height);
+
+            document.getElementById('downloadImage').style.display = 'inline-flex';
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('imageCanvas');
+            const link = document.createElement('a');
+            link.download = 'resized-image.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // ===== GRADIENT GENERATOR =====
+        const gradColor1 = document.getElementById('gradColor1');
+        const gradColor2 = document.getElementById('gradColor2');
+        const gradDir = document.getElementById('gradDir');
+        const gradientPreview = document.getElementById('gradientPreview');
+        const gradientCSS = document.getElementById('gradientCSS');
+
+        gradColor1.addEventListener('input', updateGradient);
+        gradColor2.addEventListener('input', updateGradient);
+        gradDir.addEventListener('input', function() {
+            document.getElementById('gradDirVal').textContent = this.value;
+            updateGradient();
+        });
+
+        function updateGradient() {
+            const c1 = gradColor1.value;
+            const c2 = gradColor2.value;
+            const dir = gradDir.value;
+            
+            const gradient = `linear-gradient(${dir}deg, ${c1}, ${c2})`;
+            gradientPreview.style.background = gradient;
+            gradientCSS.value = `background: ${gradient};`;
+        }
+
+        function copyGradient() {
+            gradientCSS.select();
+            document.execCommand('copy');
+            alert('CSS copied!');
+        }
+
+        // ===== MARKDOWN PREVIEW =====
+        const markdownInput = document.getElementById('markdownInput');
+        const markdownOutput = document.getElementById('markdownOutput');
+
+        markdownInput.addEventListener('input', updateMarkdown);
+
+        function updateMarkdown() {
+            let text = markdownInput.value;
+            
+            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            text = text.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            text = text.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+            text = text.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+            text = text.replace(/`(.*?)`/gim, '<code>$1</code>');
+            text = text.replace(/^\* (.+)$/gim, '<li>$1</li>');
+            text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            text = text.replace(/^\d\. (.+)$/gim, '<li>$1</li>');
+            text = text.replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2">$1</a>');
+            text = text.replace(/\n$/gim, '<br>');
+            
+            markdownOutput.innerHTML = text;
+        }
+
+        // ===== TEXT DIFF CHECKER =====
+        function compareDiff() {
+            const text1 = document.getElementById('diffText1').value;
+            const text2 = document.getElementById('diffText2').value;
+
+            if (!text1 || !text2) {
+                alert('Please enter both texts');
+                return;
+            }
+
+            const lines1 = text1.split('\n');
+            const lines2 = text2.split('\n');
+
+            let output = '';
+            const maxLines = Math.max(lines1.length, lines2.length);
+
+            for (let i = 0; i < maxLines; i++) {
+                const line1 = lines1[i] || '';
+                const line2 = lines2[i] || '';
+
+                if (line1 === line2) {
+                    output += `<div class="diff-line">${line1 || '(empty)'}</div>`;
+                } else {
+                    if (line1) {
+                        output += `<div class="diff-line diff-removed">- ${line1}</div>`;
+                    }
+                    if (line2) {
+                        output += `<div class="diff-line diff-added">+ ${line2}</div>`;
+                    }
+                }
+            }
+
+            document.getElementById('diffOutput').innerHTML = output;
+            document.getElementById('diffResult').style.display = 'block';
+        }
     </script>
 </body>
 </html>
