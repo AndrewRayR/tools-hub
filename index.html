@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tools Hub</title>
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -535,9 +541,288 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-secondary);
         }
+
+        /* Auth Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-google:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+        }
+
+        /* User Menu */
+        .user-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .user-dropdown button:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* Edit Mode Styles */
+        .tool-card.edit-mode {
+            cursor: move;
+            position: relative;
+        }
+
+        .tool-card.edit-mode::after {
+            content: '⋮⋮';
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            letter-spacing: -2px;
+        }
+
+        .tool-card.hidden-tool {
+            opacity: 0.4;
+            position: relative;
+        }
+
+        .tool-card.hidden-tool::before {
+            content: 'Hidden';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            z-index: 10;
+        }
+
+        .toggle-visibility-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            z-index: 11;
+            color: var(--text-primary);
+        }
+
+        .toggle-visibility-btn:hover {
+            background: var(--border-color);
+        }
     </style>
 </head>
 <body>
+    <!-- Auth Modal Overlay -->
+    <div id="authModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeAuthModal()">×</button>
+            
+            <div id="authLogin" class="auth-panel">
+                <h2 style="margin-bottom: 2rem; text-align: center; color: var(--text-primary);">Sign In to Tools Hub</h2>
+                
+                <!-- Google Sign In -->
+                <button class="btn-google" onclick="signInWithGoogle()">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                        <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+                        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+                
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                
+                <!-- Email Sign In -->
+                <input type="email" id="loginEmail" placeholder="Email" class="auth-input">
+                <input type="password" id="loginPassword" placeholder="Password" class="auth-input">
+                <button class="btn btn-primary" onclick="signInWithEmail()" style="width: 100%;">Sign In</button>
+                
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Don't have an account? <a href="#" onclick="showSignup(); return false;" style="color: var(--accent-color); text-decoration: none;">Sign up</a>
+                </p>
+            </div>
+            
+            <div id="authSignup" class="auth-panel" style="display: none;">
+                <h2 style="margin-bottom: 2rem; text-align: center; color: var(--text-primary);">Create Account</h2>
+                
+                <!-- Google Sign Up -->
+                <button class="btn-google" onclick="signInWithGoogle()">
+                    <svg width="18" height="18" viewBox="0 0 18 18">
+                        <path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/>
+                        <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/>
+                        <path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/>
+                        <path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/>
+                    </svg>
+                    Sign up with Google
+                </button>
+                
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+                
+                <!-- Email Sign Up -->
+                <input type="email" id="signupEmail" placeholder="Email" class="auth-input">
+                <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" class="auth-input">
+                <button class="btn btn-primary" onclick="signUpWithEmail()" style="width: 100%;">Create Account</button>
+                
+                <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">
+                    Already have an account? <a href="#" onclick="showLogin(); return false;" style="color: var(--accent-color); text-decoration: none;">Sign in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Menu (shows when logged in) -->
+    <div id="userMenu" style="display: none; position: fixed; top: 1rem; right: 2rem; z-index: 1001;">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="toggleEditMode()">
+                <span id="editModeText">✏️ Customize</span>
+            </button>
+            <div style="position: relative;">
+                <button class="user-avatar" onclick="toggleUserDropdown()" id="userAvatar">
+                    <span id="userInitial">?</span>
+                </button>
+                <div id="userDropdown" class="user-dropdown" style="display: none;">
+                    <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                        <div style="font-weight: 600; color: var(--text-primary);" id="userDisplayName">User</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);" id="userDisplayEmail">user@email.com</div>
+                    </div>
+                    <button onclick="resetDashboard()" style="width: 100%; padding: 0.75rem; border: none; background: none; color: var(--text-primary); text-align: left; cursor: pointer;">
+                        Reset Dashboard
+                    </button>
+                    <button onclick="signOutUser()" style="width: 100%; padding: 0.75rem; border: none; background: none; color: var(--text-primary); text-align: left; cursor: pointer;">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign In Button (shows when not logged in) -->
+    <div id="signInButton" style="position: fixed; top: 1rem; right: 2rem; z-index: 1001;">
+        <button class="btn btn-primary" onclick="openAuthModal()">Sign In</button>
+    </div>
+
     <div class="app-container">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
@@ -1114,6 +1399,361 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
+        // ===== FIREBASE INITIALIZATION =====
+        // REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let userPreferences = {
+            toolOrder: [],
+            hiddenTools: []
+        };
+        let isEditMode = false;
+
+        // ===== AUTH STATE LISTENER =====
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('signInButton').style.display = 'none';
+                document.getElementById('userMenu').style.display = 'block';
+                
+                // Update user display
+                const displayName = user.displayName || user.email.split('@')[0];
+                document.getElementById('userDisplayName').textContent = displayName;
+                document.getElementById('userDisplayEmail').textContent = user.email;
+                document.getElementById('userInitial').textContent = displayName.charAt(0).toUpperCase();
+                
+                // Load user preferences
+                await loadUserPreferences();
+                applyUserPreferences();
+            } else {
+                currentUser = null;
+                document.getElementById('signInButton').style.display = 'block';
+                document.getElementById('userMenu').style.display = 'none';
+                
+                // Reset to default view
+                resetToDefaultView();
+            }
+        });
+
+        // ===== AUTH FUNCTIONS =====
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'flex';
+            showLogin();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('authLogin').style.display = 'block';
+            document.getElementById('authSignup').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('authLogin').style.display = 'none';
+            document.getElementById('authSignup').style.display = 'block';
+        }
+
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+                closeAuthModal();
+            } catch (error) {
+                alert('Error signing in with Google: ' + error.message);
+            }
+        }
+
+        async function signInWithEmail() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                closeAuthModal();
+            } catch (error) {
+                alert('Error signing in: ' + error.message);
+            }
+        }
+
+        async function signUpWithEmail() {
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+                closeAuthModal();
+            } catch (error) {
+                alert('Error creating account: ' + error.message);
+            }
+        }
+
+        async function signOutUser() {
+            try {
+                await auth.signOut();
+                toggleUserDropdown(); // Close dropdown
+            } catch (error) {
+                alert('Error signing out: ' + error.message);
+            }
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#userMenu')) {
+                document.getElementById('userDropdown').style.display = 'none';
+            }
+        });
+
+        // ===== DASHBOARD CUSTOMIZATION =====
+        async function loadUserPreferences() {
+            if (!currentUser) return;
+            
+            try {
+                const doc = await db.collection('users').doc(currentUser.uid).get();
+                if (doc.exists) {
+                    userPreferences = doc.data();
+                } else {
+                    // Initialize default preferences
+                    userPreferences = {
+                        toolOrder: getDefaultToolOrder(),
+                        hiddenTools: []
+                    };
+                    await saveUserPreferences();
+                }
+            } catch (error) {
+                console.error('Error loading preferences:', error);
+            }
+        }
+
+        async function saveUserPreferences() {
+            if (!currentUser) return;
+            
+            try {
+                await db.collection('users').doc(currentUser.uid).set(userPreferences);
+                console.log('Preferences saved successfully');
+            } catch (error) {
+                console.error('Error saving preferences:', error);
+            }
+        }
+
+        function getDefaultToolOrder() {
+            const cards = document.querySelectorAll('.tool-card');
+            return Array.from(cards).map(card => card.dataset.tool);
+        }
+
+        function applyUserPreferences() {
+            const grid = document.querySelector('.tools-grid');
+            const cards = Array.from(document.querySelectorAll('.tool-card'));
+            
+            // Remove all cards
+            cards.forEach(card => card.remove());
+            
+            // Re-add in custom order
+            if (userPreferences.toolOrder && userPreferences.toolOrder.length > 0) {
+                userPreferences.toolOrder.forEach(toolId => {
+                    const card = cards.find(c => c.dataset.tool === toolId);
+                    if (card) {
+                        grid.appendChild(card);
+                    }
+                });
+            } else {
+                // Add in default order
+                cards.forEach(card => grid.appendChild(card));
+            }
+            
+            // Apply hidden tools
+            if (userPreferences.hiddenTools) {
+                userPreferences.hiddenTools.forEach(toolId => {
+                    const card = document.querySelector(`[data-tool="${toolId}"]`);
+                    if (card) {
+                        card.classList.add('hidden-tool');
+                    }
+                });
+            }
+        }
+
+        function resetToDefaultView() {
+            const grid = document.querySelector('.tools-grid');
+            const cards = Array.from(document.querySelectorAll('.tool-card'));
+            
+            // Remove all cards
+            cards.forEach(card => {
+                card.remove();
+                card.classList.remove('hidden-tool', 'edit-mode');
+                card.draggable = false;
+                const toggleBtn = card.querySelector('.toggle-visibility-btn');
+                if (toggleBtn) toggleBtn.remove();
+            });
+            
+            // Re-add in default order
+            const defaultOrder = getDefaultToolOrder();
+            defaultOrder.forEach(toolId => {
+                const card = cards.find(c => c.dataset.tool === toolId);
+                if (card) {
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        // ===== EDIT MODE =====
+        function toggleEditMode() {
+            if (!currentUser) {
+                alert('Please sign in to customize your dashboard');
+                openAuthModal();
+                return;
+            }
+            
+            isEditMode = !isEditMode;
+            const cards = document.querySelectorAll('.tool-card');
+            
+            if (isEditMode) {
+                document.getElementById('editModeText').textContent = '✓ Done';
+                cards.forEach(card => {
+                    card.classList.add('edit-mode');
+                    card.draggable = true;
+                    
+                    // Add visibility toggle button
+                    if (!card.querySelector('.toggle-visibility-btn')) {
+                        const toggleBtn = document.createElement('button');
+                        toggleBtn.className = 'toggle-visibility-btn';
+                        toggleBtn.textContent = card.classList.contains('hidden-tool') ? 'Show' : 'Hide';
+                        toggleBtn.onclick = (e) => {
+                            e.stopPropagation();
+                            toggleToolVisibility(card);
+                        };
+                        card.appendChild(toggleBtn);
+                    }
+                });
+                
+                // Enable drag and drop
+                enableDragAndDrop();
+            } else {
+                document.getElementById('editModeText').textContent = '✏️ Customize';
+                cards.forEach(card => {
+                    card.classList.remove('edit-mode');
+                    card.draggable = false;
+                    const toggleBtn = card.querySelector('.toggle-visibility-btn');
+                    if (toggleBtn) toggleBtn.remove();
+                });
+                
+                // Save changes
+                saveCurrentOrder();
+            }
+        }
+
+        function toggleToolVisibility(card) {
+            const toolId = card.dataset.tool;
+            card.classList.toggle('hidden-tool');
+            
+            const toggleBtn = card.querySelector('.toggle-visibility-btn');
+            const isHidden = card.classList.contains('hidden-tool');
+            toggleBtn.textContent = isHidden ? 'Show' : 'Hide';
+            
+            if (isHidden) {
+                if (!userPreferences.hiddenTools.includes(toolId)) {
+                    userPreferences.hiddenTools.push(toolId);
+                }
+            } else {
+                userPreferences.hiddenTools = userPreferences.hiddenTools.filter(id => id !== toolId);
+            }
+        }
+
+        function saveCurrentOrder() {
+            const cards = document.querySelectorAll('.tool-card');
+            userPreferences.toolOrder = Array.from(cards).map(card => card.dataset.tool);
+            saveUserPreferences();
+        }
+
+        async function resetDashboard() {
+            if (!confirm('Reset dashboard to default? This will remove all customizations.')) {
+                return;
+            }
+            
+            userPreferences = {
+                toolOrder: getDefaultToolOrder(),
+                hiddenTools: []
+            };
+            
+            await saveUserPreferences();
+            applyUserPreferences();
+            
+            // Exit edit mode if active
+            if (isEditMode) {
+                toggleEditMode();
+            }
+            
+            toggleUserDropdown();
+        }
+
+        // ===== DRAG AND DROP =====
+        let draggedCard = null;
+
+        function enableDragAndDrop() {
+            const cards = document.querySelectorAll('.tool-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', handleDrop);
+                card.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            if (!isEditMode) return;
+            draggedCard = this;
+            e.dataTransfer.effectAllowed = 'move';
+            this.style.opacity = '0.5';
+        }
+
+        function handleDragOver(e) {
+            if (!isEditMode) return;
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (this !== draggedCard) {
+                const rect = this.getBoundingClientRect();
+                const next = (e.clientX - rect.left) / rect.width > 0.5;
+                this.parentNode.insertBefore(draggedCard, next ? this.nextSibling : this);
+            }
+        }
+
+        function handleDrop(e) {
+            if (!isEditMode) return;
+            e.stopPropagation();
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            if (!isEditMode) return;
+            this.style.opacity = '1';
+        }
+
+        // ===== ORIGINAL TOOLS HUB CODE =====
         // Sidebar Toggle
         const sidebar = document.getElementById('sidebar');
         const mainContent = document.getElementById('mainContent');
