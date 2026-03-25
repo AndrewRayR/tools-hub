@@ -911,6 +911,37 @@
                     </svg>
                     <input type="text" class="search-input" id="search" placeholder="Search tools...">
                 </div>
+
+                <!-- User Menu (shows when logged in) -->
+                <div id="userMenu" style="display: none;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <button class="btn btn-secondary" onclick="toggleEditMode()">
+                            <span id="editModeText">✏️ Customize</span>
+                        </button>
+                        <div style="position: relative;">
+                            <button class="user-avatar" onclick="toggleUserDropdown()" id="userAvatar">
+                                <span id="userInitial">?</span>
+                            </button>
+                            <div id="userDropdown" class="user-dropdown" style="display: none;">
+                                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+                                    <div style="font-weight: 600; color: var(--text-primary);" id="userDisplayName">User</div>
+                                    <div style="font-size: 0.875rem; color: var(--text-secondary);" id="userDisplayEmail">user@email.com</div>
+                                </div>
+                                <button onclick="resetDashboard()" style="width: 100%; padding: 0.75rem; border: none; background: none; color: var(--text-primary); text-align: left; cursor: pointer;">
+                                    Reset Dashboard
+                                </button>
+                                <button onclick="signOutUser()" style="width: 100%; padding: 0.75rem; border: none; background: none; color: var(--text-primary); text-align: left; cursor: pointer;">
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sign In Button (shows when not logged in) -->
+                <div id="signInButton">
+                    <button class="btn btn-primary" onclick="openAuthModal()">Sign In</button>
+                </div>
             </div>
 
             <div class="content-area">
